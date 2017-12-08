@@ -1,0 +1,36 @@
+﻿@model mjaang_bugtracker.Models.TicketUserViewModel
+@{
+    ViewBag.Title = "TicketUserAssign";
+}
+@Styles.Render("~/Content/css")
+<link href="~/Content/jquery.multiselect.css" rel="stylesheet" />
+@Scripts.Render("~/bundles/modernizr")
+
+    <h2>Assign User</h2>
+@using (Html.BeginForm("TicketUser", "Tickets", FormMethod.Post))
+{
+
+        <p>Name: @Model.FirstName @Model.LastName</p>
+
+    <br />
+    <br />
+    
+        @Html.HiddenFor(model => model.Id, new { })
+
+        <div>
+        @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { id = "mySelect" })
+
+    </div>
+<button type="submit">Submit</button>
+}
+
+@section scripts{
+    <script src="~/Scripts/jQuery-Plugin-For-Multi-Select-List-with-Checkboxes-MultiSelect/jquery.multiselect.js"></script>
+
+    <script type="text/javascript">
+        $(function () {
+            $('#Ed').multiselect({});
+        });
+    </script>
+
+    }

@@ -1,0 +1,26 @@
+﻿@model mjaang_bugtracker.Models.ProjectUserViewModel
+@{
+    ViewBag.Title = "Assign Roles";
+}
+
+    <h2>Assign User</h2>
+@using (Html.BeginForm("ProjectUser", "Projects", FormMethod.Post))
+{
+
+        <p>Project: @Model.FirstName </p>
+
+    <br />
+    <br />
+    
+        @Html.HiddenFor(model => model.Id, new { })
+
+        <div>
+        @Html.ListBox("SelectedUsers", Model.Users, htmlAttributes: new { id = "mySelect" })
+       </div>
+
+<button type="submit">Submit</button>
+}
+
+@section scripts{
+
+    }

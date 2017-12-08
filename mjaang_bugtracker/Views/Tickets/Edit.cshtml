@@ -1,0 +1,197 @@
+﻿@model mjaang_bugtracker.Models.Tickets
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>Tickets</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter title" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", placeholder ="Enter description" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.Created, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Created, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Created, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Updated, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Updated, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Updated, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        @*<div class="form-group">
+            <div class="control-label col-md-2">
+                Project
+            </div>
+            @Html.LabelFor(model => model.ProjectId, "ProjectId", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("ProjectId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.ProjectId, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <div class = "control-label col-md-2">
+                Type
+            </div>
+            @*@Html.LabelFor(model => model.TicketTypeId, "TicketTypeId", htmlAttributes: new { @class = "control-label col-md-2" })*@
+            <div class="col-md-10">
+                @Html.DropDownList("TicketTypeId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TicketTypeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="control-label col-md-2">
+                Priority
+            </div>
+            @*@Html.LabelFor(model => model.TicketPriorityId, "TicketPriorityId", htmlAttributes: new { @class = "control-label col-md-2" })*@
+            <div class="col-md-10">
+                @Html.DropDownList("TicketPriorityId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TicketPriorityId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+            <div class="form-group">
+                <div class="control-label col-md-2">
+                    Status
+                </div>
+                @*@Html.LabelFor(model => model.TicketStatusId, "TicketStatusId", htmlAttributes: new { @class = "control-label col-md-2" })*@
+                    <div class="col-md-10">
+
+                            @Html.DropDownList("TicketStatusId", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TicketStatusId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+        
+
+        @*<div class="form-group">
+            <div class="control-label col-md-2">
+                Created by
+            </div>
+            @Html.LabelFor(model => model.CreatedById, "CreatedById", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownList("CreatedById", null, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CreatedById, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        
+            @*@Html.LabelFor(model => model.AssignedToId, "AssignedToId", htmlAttributes: new { @class = "control-label col-md-2" })*@
+            
+                @if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                {
+                    <div class="form-group">
+                        <div class="control-label col-md-2">
+                            Assigned to
+                        </div>
+                        <div class="col-md-10">
+                            @Html.DropDownList("AssignedToId", null, "Choose Assign to", htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.AssignedToId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.AssignedToId)
+                }
+
+
+        @*<div class="form-group">
+            @Html.LabelFor(model => model.TicketAttachment, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="image" type="file" class="form-control" id="fileUpload" onchange="loadFile(event)" />
+                @Html.EditorFor(model => model.TicketAttachment, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter URL", id = "webAdd" } })
+                @Html.ValidationMessageFor(model => model.TicketAttachment, "", new { @class = "text-danger" })
+                <br />
+                <br />
+
+                <div class="col-xs-6" style="max-height:200px; max-width:200px">
+                    @if (Model.TicketAttachment != null)
+                    {
+                        <h5><strong>Media preview</strong></h5>
+                        <img class="img-responsive" src="@Model.TicketAttachment" alt="" id="output" />
+                    }
+                </div>
+            </div>
+        </div>*@
+
+        @*<div class="form-group">
+            <p>File Upload</p>
+            <div class="col-md-10">*@
+                @*<input name="image" accept="image/*" onchange="loadFile(event)" type="file" class="form-control" id="fileUpload" />*@
+                @*<input name="upload" type="file" id="Files" multiple onchange="loadFile(event)" class="form-control" />*@
+
+                @*<div id="many">
+                    <input type="file" class="many; form-control" name="upload" id="Files" multiple onchange="loadFile(event)" />
+                </div>
+                <div id="single">
+                    <input type="file" class="single" name="upload" onchange="loadFile(event)"/><br />
+                    <input type="file" class="single" name="upload" onchange="loadFile(event)"/><br />
+                    <input type="file" class="single" name="upload" onchange="loadFile(event)"/><br />
+                </div>*@
+
+                @*@Html.EditorFor(model => model.TicketAttachment, new { htmlAttributes = new { @class = "form-control", onchange = "loadFile(event)", placeholder = "Enter URL" } })
+                @Html.ValidationMessageFor(model => model.TicketAttachment, "", new { @class = "text-danger" })
+
+                <div style="max-height:200px; max-width:200px">
+                    @if (!string.IsNullOrWhiteSpace("image"))
+                    {
+                        <h5><strong>Media preview</strong></h5>
+                        <img class="img-responsive" id="output" />
+                    }
+                </div>
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@section scripts{
+<script>
+  var loadFile = function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('output');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+</script>
+}

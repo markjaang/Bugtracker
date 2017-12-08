@@ -1,0 +1,500 @@
+﻿@model mjaang_bugtracker.Models.Tickets
+
+@{
+    ViewBag.Title = "Details";
+}
+
+@Styles.Render("~/assets/css")
+
+
+@Scripts.Render("~/assets/modernizr")
+
+        <h3 class="header blue lighter smaller">
+            <i class="ace-icon fa fa-list smaller-90"></i>
+            Ticket Details
+        </h3>
+
+        <div class="row">
+    <div class="col-sm-6 widget-container-col">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h6 class="widget-title">Ticket Info</h6>
+
+                <div class="widget-toolbar">
+
+                    <a href="javascript:history.go(0)" data-action="reload">
+                        <i class="ace-icon fa fa-refresh"></i>
+                    </a>
+
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                    <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4 scrollable" data-size="300">
+                    <div class="content">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                 Created by
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.CreatedBy.FirstName)
+                            </dd>
+
+                            <dt>
+                                 Assigned to
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.AssignedTo.FirstName)
+                            </dd>
+
+                            <dt>
+                                 Project
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Project.Title)
+                            </dd>
+
+                            <dt>
+                                 Priority
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.TicketPriority.Name)
+                            </dd>
+
+                            <dt>
+                                 Status
+                            </dt>
+
+                            <dd>
+                                @if (!string.IsNullOrEmpty(Model.AssignedToId))
+                                {
+                                    <p>Assigned</p>
+                                }
+                                else
+                                {
+                                    <p>Unassigned</p>
+                                }
+                            </dd>
+
+                            <dt>
+                                 Type
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.TicketType.Name)
+                            </dd>
+
+                            <dt>
+                                 Ticket
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Title)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Description)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Description)
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Created)
+                            </dt>
+
+                            <dd>
+                                @Model.Created.ToString("d")
+                            </dd>
+
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Updated)
+                            </dt>
+
+                            <dd>
+                                @if (Model.Updated != null)
+                                {
+                                    @Model.Updated.Value.ToString("d")
+                                }
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h6 class="widget-title">Files</h6>
+
+                <div class="widget-toolbar">
+
+                    <a href="javascript:history.go(0)" data-action="reload">
+                        <i class="ace-icon fa fa-refresh"></i>
+                    </a>
+
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                    <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4 scrollable" data-size="500">
+                    <div class="content">
+                        <h6>Attached Files</h6>
+                            @foreach (var att in Model.TicketAttachment)
+                            {
+
+                                <div>
+                                    @if (!string.IsNullOrEmpty(att.FileUrl) || !string.IsNullOrEmpty(att.Description))
+                                    {
+                                        <a href="@att.FileUrl" title="Description: @att.Description">@att.CreatedName</a>
+                                    }
+                                    else
+                                    {
+                                        <p>Currently there are no attached files</p>
+                                    }
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <a href="@Url.Action("DeleteAttach", "Tickets", new { id = att.Id })"><i class="ace-icon fa fa-trash-o bigger-120" style="color:red"></i></a>
+                                    }
+                                </div>
+                            }
+                        @using (Html.BeginForm("CreateAttach", "Tickets", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(model => model.Id);
+                            @Html.HiddenFor(model => model.Created);
+                            <div class="form-group">
+
+                           
+                                <input name="upload" type="file" id="fileUpload" multiple onchange="loadFile(event)" class="form-control" required />
+
+
+                                <div class="form-group">
+                                    <input name="description" type="text" class="form-control" placeholder="enter description" />
+                                </div>
+
+                                <div style="max-height:200px; max-width:200px">
+                                    @if (!string.IsNullOrWhiteSpace("upload"))
+                                    {
+                                        <h5><strong>Media preview</strong></h5>
+                                        <img class="img-responsive" id="output" />
+                                    }
+                                </div>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-sm btn-info no-radius" type="submit">
+                                        <i class="ace-icon fa fa-share"></i>
+                                        Submit
+                                    </button>
+                                </span>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 widget-container-col">
+        <div class="widget-box widget-color-dark" style="margin-bottom:0px;padding-bottom:0px;border-bottom:lightgrey">
+            <div class="widget-header">
+                <h6 class="widget-title">Comment</h6>
+
+                <div class="widget-toolbar">
+
+                    <a href="javascript:history.go(0)" data-action="reload">
+                        <i class="ace-icon fa fa-refresh"></i>
+                    </a>
+
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                    <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4 scrollable" data-size="500">
+                    <div class="content" style="padding-bottom:10px">
+                        @foreach (var com in Model.TicketComment)
+                        {
+                            <div class="itemdiv dialogdiv">
+                                <div class="user">
+                                    <img alt="User" src="~/assets/img/user-icon.png" />
+                                </div>
+                                <div class="body">
+                                    <div class="time">
+                                        <i class="ace-icon fa fa-clock-o"></i>
+                                        <span class="green">
+                                            commented on @com.Created.ToString("d")
+                                        </span>
+                                    </div>
+                                    <br />
+                                    @if (com.Updated != null)
+                                    {
+                                        <div class="time">
+                                            <i class="ace-icon fa fa-clock-o"></i>
+                                            <span class="green">
+                                                edited on @com.Updated.Value.ToString("d")
+                                            </span>
+                                        </div>
+                                    }
+                                    <div class="name">
+                                        <a href="#">@com.User.FirstName @com.User.LastName</a>
+                                    </div>
+                                    <div class="text">@com.Comment</div>
+                                    <div class="tools">
+                                        <a href="@Url.Action("EditComment","Tickets", new { id = com.Id })" class="btn btn-minier btn-info">
+                                            <i class="ace-icon fa fa-pencil blue bigger-125"></i>
+                                        </a>
+                                        <a href="@Url.Action("DeleteComment","Tickets", new { id = com.Id })" class="btn btn-minier btn-info">
+                                            <i class="ace-icon fa fa-times red bigger-125"></i>
+                                        </a>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+
+                        } 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class="widget-header" style="padding-bottom:10px;padding-top:20px;border-top:solid 1px lightgrey;border-left:solid 1px #666;border-right:solid 1px #666;border-bottom:solid 1px #666;margin-top:0px">
+            @using (Html.BeginForm("CreateComments", "Tickets", FormMethod.Post))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(model => model.Id);
+                @Html.HiddenFor(model => model.Created);
+                <div class="col-xs-10">
+                    <input placeholder="add a comment" type="text" class="form-control" name="Comment" required>
+                </div>
+                <div class="col-xs-2">
+                    <span class="input-group-btn">
+                        <button class="btn btn-sm btn-info no-radius" type="submit">
+                            <i class="ace-icon fa fa-share"></i>
+                            Submit
+                        </button>
+                    </span>
+                </div>
+            }
+        </div>
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h6 class="widget-title">Ticket History</h6>
+
+                <div class="widget-toolbar">
+
+                    <a href="javascript:history.go(0)" data-action="reload">
+                        <i class="ace-icon fa fa-refresh"></i>
+                    </a>
+
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                    <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4 scrollable" data-size="500">
+                    <div class="content">
+                        @foreach (var log in Model.TicketHistory)
+                        {
+                            <div class="row">
+                                <div class="col-xs-12">
+                                    <!-- PAGE CONTENT BEGINS -->
+                                    <div id="timeline-1">
+                                        <div class="row">
+                                            <div class="col-xs-12 col-sm-10 col-sm-offset-1">
+                                                <div class="timeline-container">
+                                                    @if (log.Updated.Value.ToString("d") == System.DateTimeOffset.Now.ToString("d"))
+                                                    {
+                                                        <div class="timeline-label">
+                                                            <span class="label label-primary arrowed-in-right label-lg">
+                                                                <b>Today</b>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    else if (log.Updated.Value.ToString("d") == System.DateTimeOffset.Now.AddDays(-1).ToString("d"))
+                                                    {
+                                                        <div class="timeline-label">
+                                                            <span class="label label-success arrowed-in-right label-lg">
+                                                                <b>Yesterday</b>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    else
+                                                    {
+                                                        <div class="timeline-label">
+                                                            <span class="label label-grey arrowed-in-right label-lg">
+                                                                <b>@log.Updated.Value.ToString("d")</b>
+                                                            </span>
+                                                        </div>
+                                                    }
+                                                    <div class="timeline-items">
+                                                        <div class="timeline-item clearfix">
+                                                            <div class="timeline-info">
+                                                                @if (log.Property == "AssignedTo")
+                                                                {
+                                                                    <i class="timeline-indicator ace-icon fa fa-cutlery btn btn-success no-hover"></i>
+                                                                }
+                                                                else if (log.Property == "Description")
+                                                                {
+                                                                    <i class="timeline-indicator ace-icon fa fa-flask btn btn-default no-hover"></i>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <i class="timeline-indicator ace-icon fa fa-bug btn btn-danger no-hover"></i>
+                                                                }
+                                                            </div>
+                                                            <div class="widget-box transparent">
+                                                                <div class="widget-header widget-header-small">
+                                                                    <h5 class="widget-title smaller">
+                                                                        <a href="#" class="blue">@log.User.FirstName</a>
+                                                                        <span class="grey">updated a ticket</span>
+                                                                    </h5>
+
+                                                                    <span class="widget-toolbar no-border">
+                                                                        <i class="ace-icon fa fa-clock-o bigger-110"></i>
+                                                                        @log.Updated.Value.ToString("t")
+                                                                    </span>
+
+                                                                    <span class="widget-toolbar">
+                                                                        <a href="javascript:history.go(0)" data-action="reload">
+                                                                            <i class="ace-icon fa fa-refresh"></i>
+                                                                        </a>
+
+                                                                        <a href="#" data-action="collapse">
+                                                                            <i class="ace-icon fa fa-chevron-up"></i>
+                                                                        </a>
+                                                                    </span>
+                                                                </div>
+
+                                                                <div class="widget-body">
+                                                                    <div class="widget-main">
+                                                                        The <span class="strong">"@log.Property"</span> was updated from <span class="strong">"@log.OldValue"</span> to <span class="strong">"@log.NewValue"</span>
+                                                                        <div class="space-6"></div>
+
+                                                                        <div class="widget-toolbox clearfix">
+                                                                            <div class="pull-left">
+                                                                                <i class="ace-icon fa fa-hand-o-right grey bigger-125"></i>
+                                                                                <a href="https://mjaangbugtracker.azurewebsites.net/Tickets/Details/@log.TicketId" class="bigger-110">Go to the Ticket</a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+
+
+    @section scripts{
+
+
+        <script>
+            var item_to_delete;
+            $(".deleteItem").click(function (e) {
+                item_to_delete = $(this).data('id');
+            });
+            $('#btnContinueDelete').click(function () {
+                window.location = "/Controller/DeleteAttachment/" + item_to_delete;
+            });
+        </script>
+
+        <!-- page specific plugin scripts -->
+        <script src="~/assets/js/jquery-ui.custom.min.js"></script>
+        <script src="~/assets/js/jquery.ui.touch-punch.min.js"></script>
+
+        <!-- inline scripts related to this page -->
+        <script type="text/javascript">
+            jQuery(function ($) {
+                $('[data-toggle="buttons"] .btn').on('click', function (e) {
+                    var target = $(this).find('input[type=radio]');
+                    var which = parseInt(target.val());
+                    $('[id*="timeline-"]').addClass('hide');
+                    $('#timeline-' + which).removeClass('hide');
+                });
+            });
+        </script>
+
+        <script>
+            $('#recent-box [data-rel="tooltip"]').tooltip({ placement: tooltip_placement });
+        </script>
+
+        <script>
+            $('.dialogs,.comments').ace_scroll({
+                size: 300
+            });
+        </script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('.scrollable').each(function () {
+            var $this = $(this);
+            $(this).ace_scroll({
+                size: $this.attr('data-size') || 300,
+                //styleClass: 'scroll-left scroll-margin scroll-thin scroll-dark scroll-light no-track scroll-visible'
+            });
+        });
+    });
+        </script>
+
+        <script>
+  var loadFile = function(event) {
+    var reader = new FileReader();
+    reader.onload = function(){
+      var output = document.getElementById('output');
+      output.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  };
+        </script>
+    }

@@ -1,0 +1,16 @@
+﻿@model IEnumerable<mjaang_bugtracker.Models.AdminUserListModel>
+
+<div class="editor-label">
+    <p>My role is:</p>
+</div>
+<div>
+    @foreach (var item in Model)
+    {
+        <div>
+            @foreach (var role in item.roles)
+            {
+                <p>@role</p>
+            }
+        </div>
+    }
+</div>

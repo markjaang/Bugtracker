@@ -1,0 +1,83 @@
+﻿@model mjaang_bugtracker.Models.Projects
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h3 class="header blue lighter smaller">
+    <i class="ace-icon fa fa-list smaller-90"></i>
+    Project Details
+</h3>
+
+<div class="row">
+    <div class="col-sm-8 widget-container-col">
+        <div class="widget-box widget-color-dark">
+            <div class="widget-header">
+                <h6 class="widget-title">Project Info</h6>
+
+                <div class="widget-toolbar">
+
+                    <a href="javascript:history.go(0)" data-action="reload">
+                        <i class="ace-icon fa fa-refresh"></i>
+                    </a>
+
+                    <a href="#" data-action="collapse">
+                        <i class="ace-icon fa fa-chevron-up"></i>
+                    </a>
+
+                    <a href="#" data-action="fullscreen" class="orange2">
+                        <i class="ace-icon fa fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="widget-body">
+                <div class="widget-main padding-4 scrollable" data-size="300">
+                    <div class="content">
+                        <dl class="dl-horizontal">
+                            <dt>
+                                @Html.DisplayNameFor(model => model.Title)
+                            </dt>
+
+                            <dd>
+                                @Html.DisplayFor(model => model.Title)
+                            </dd>
+
+                            <dt>
+                                Content
+                            </dt>
+
+                            <dd>
+                                @Html.Raw(Model.Body)
+                            </dd>
+
+                            <dt>
+                                Created on
+                            </dt>
+
+                            <dd>
+                                @Model.Created.ToString("d")
+                            </dd>
+
+                            <dt>
+                                Updated on
+                            </dt>
+
+                            <dd>
+                                @if (Model.Updated != null)
+            {
+                                    @Model.Updated.Value.ToString("d")
+                                }
+                            </dd>
+
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>

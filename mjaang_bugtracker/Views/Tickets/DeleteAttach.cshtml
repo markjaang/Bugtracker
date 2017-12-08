@@ -1,0 +1,74 @@
+﻿@model mjaang_bugtracker.Models.TicketAttachments
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>TicketAttachments</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Ticket.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Ticket.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FileUrl)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FileUrl)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Created)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Created)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Updated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Updated)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm("DeleteAttach", "Tickets")) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

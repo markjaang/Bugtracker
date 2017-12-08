@@ -1,0 +1,48 @@
+﻿@using Microsoft.AspNet.Identity
+
+<li class="light-blue">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle">
+                            <img class="nav-user-photo" src="~/assets/img/user-icon.png" alt="User Photo" />
+                            <span class="user-info">
+                                <small>Welcome,</small>
+                               
+                            </span>
+
+                            <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
+
+                        <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close" style="min-width:220px">
+                            <li>
+                                <a href="@Url.Action("Index","Manage")">
+                                    <i class="ace-icon fa fa-cog"></i>
+                                    Settings
+                                </a>
+                            </li>
+
+                            <li>
+                                <a href="@Url.Action("ChangeUserInfo","Manage")">
+                                    <i class="ace-icon fa fa-user"></i>
+                                    Profile
+                                </a>
+                            </li>
+
+                            <li style="margin-left:10px">
+                                @if (Request.IsAuthenticated)
+                                {
+                                    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "light-blue"}))
+                                    {
+                                        @Html.AntiForgeryToken()
+
+                                        <div>@Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })</div>
+                                        <div><a href="javascript:document.getElementById('logoutForm').submit()"><i class="ace-icon fa fa-power-off"></i>&nbsp;&nbsp;Log off</a></div>
+                                    }
+                                }
+                                else
+                                {
+                                        <div><i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</div>
+                                        <div><i class="ace-icon fa fa-power-off"></i>&nbsp;&nbsp;@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</div>
+
+                                }
+                            </li>
+                        </ul>
+                    </li>

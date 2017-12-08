@@ -45,3 +45,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+App_Start
+assets
+bin
+Content
+fonts
+img
+Landingassets
+Migrations
+obj
+Scripts
+private.config
+Web.config
+mjaangbugtracker.PublishSettings
+readme.md
+README.md
+README.sample
